@@ -14,7 +14,6 @@ public class Sensor {
 
     private String name;
     private String ubication;
-    private String type;
     private LocalDateTime creationDate;
 
     @ManyToMany(mappedBy = "sensores")
@@ -49,14 +48,6 @@ public class Sensor {
 
     public void setUbication(String ubication) {
         this.ubication = ubication;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public LocalDateTime getCreationDate() {
