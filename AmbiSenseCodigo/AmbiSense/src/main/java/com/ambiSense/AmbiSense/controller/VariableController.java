@@ -16,9 +16,5 @@ public class VariableController {
     @GetMapping
     public List<Variable> findAll() {return variableService.findAll();}
 
-    @GetMapping("/variables2/")
-    public List<Variable> variables2(){
-        return variableService.findAll();
-    }
 
 }
