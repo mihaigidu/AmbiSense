@@ -1,7 +1,6 @@
 package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "variable")
@@ -13,18 +12,12 @@ public class Variable {
     private String name;
     private String unity;
 
-    @OneToMany(mappedBy = "variable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Lectura> lecturas;
 
-    @OneToMany(mappedBy = "variable", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Alerta> alertas;
-
-    // Getters y Setters
-    public Long getId() {
+    public Long getIdVariable() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setIdVariable(Long id) {
         this.id = id;
     }
 
@@ -42,21 +35,5 @@ public class Variable {
 
     public void setUnity(String value) {
         this.unity = value;
-    }
-
-    public Set<Lectura> getLecturas() {
-        return lecturas;
-    }
-
-    public void setLecturas(Set<Lectura> lecturas) {
-        this.lecturas = lecturas;
-    }
-
-    public Set<Alerta> getAlertas() {
-        return alertas;
-    }
-
-    public void setAlertas(Set<Alerta> alertas) {
-        this.alertas = alertas;
     }
 }

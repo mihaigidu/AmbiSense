@@ -1,26 +1,25 @@
 package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "sensor")
-public class Sensor {
+public class  Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
     private String ubication;
+    private String type;
     private LocalDateTime creationDate;
 
     @ManyToMany(mappedBy = "sensores")
     private Set<Usuario> usuarios = new HashSet<>();
-
-    @OneToMany(mappedBy = "sensor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Lectura> lecturas = new HashSet<>();
 
     @OneToMany(mappedBy = "sensor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Alerta> alertas = new HashSet<>();
@@ -50,6 +49,14 @@ public class Sensor {
         this.ubication = ubication;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -64,14 +71,6 @@ public class Sensor {
 
     public void setUsuarios(Set<Usuario> usuarios) {
         this.usuarios = usuarios;
-    }
-
-    public Set<Lectura> getLecturas() {
-        return lecturas;
-    }
-
-    public void setLecturas(Set<Lectura> lecturas) {
-        this.lecturas = lecturas;
     }
 
     public Set<Alerta> getAlertas() {

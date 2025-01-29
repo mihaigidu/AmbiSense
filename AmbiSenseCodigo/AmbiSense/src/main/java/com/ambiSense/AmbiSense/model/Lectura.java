@@ -11,19 +11,18 @@ public class Lectura {
     private Long id;
 
     private double valor;
-
-    @Column(name = "fecha_hora")
+    @Column(name = "date")
     private LocalDateTime dateLectura;
 
     @ManyToOne
-    @JoinColumn(name = "id_variable", nullable = false)
+    @JoinColumn(name = "id_variable")
     private Variable variable;
 
-    @ManyToOne
-    @JoinColumn(name = "id_sensor", nullable = false)
-    private Sensor sensor;
+//    @ManyToOne
+//    @JoinColumn(name = "id_sensor")
+//    private Sensor sensor;
 
-    // Getters y Setters
+
     public Long getId() {
         return id;
     }
@@ -54,13 +53,5 @@ public class Lectura {
 
     public void setVariable(Variable variable) {
         this.variable = variable;
-    }
-
-    public Sensor getSensor() {
-        return sensor;
-    }
-
-    public void setSensor(Sensor sensor) {
-        this.sensor = sensor;
     }
 }

@@ -1,5 +1,4 @@
 package com.ambiSense.AmbiSense.model;
-
 import jakarta.persistence.*;
 import java.util.Set;
 
