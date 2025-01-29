@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gráfica de Salubridad del Aula</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <style>
+        #chart-container {
+            width: 80%;
+            height: 500px;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+<body>
+    <h2 style="text-align:center;">Análisis de Salubridad del Aula - Valores por Hora</h2>
+    <div id="chart-container"></div>
+
+    <script>
+        var myChart = echarts.init(document.getElementById('chart-container'));
+
+        // Rango óptimo de temperatura
+        var optimalTemperatureRange = [23, 27];
+
+        var data = {
+            hours: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            temperature: [22.0, 21.8, 21.5, 21.3, 21.0, 21.2, 22.5, 23.8, 24.0, 25.0, 26.5, 27.2, 28.0, 28.5, 29.5, 29.0, 28.0, 27.5, 26.0, 25.0, 24.5, 23.8, 23.0, 22.5],
+            humidity: [60, 59, 58, 57, 56, 57, 59, 60, 61, 62, 63, 64, 65, 66, 67, 66, 66, 65, 64, 63, 62, 62, 61, 60],
+            aqi: [80, 79, 78, 77, 76, 77, 79, 81, 82, 84, 85, 87, 90, 92, 95, 93, 92, 90, 88, 86, 85, 84, 83, 82]
+        };
+
+        var option = {
+            legend: {
+                top: 'bottom'
+            },
+            tooltip: {
+                trigger: 'axis',
+                showContent: true
+            },
+            xAxis: {
+                type: 'category',
+                name: 'Hora',
+                data: data.hours
+            },
+            yAxis: {
+                type: 'value',
+                name: 'Valores'
+            },
+            grid: { top: '15%', bottom: '20%' },
+            series: [
+                {
+                    name: 'Temperatura (°C)',
+                    type: 'line',
+                    smooth: true,
+                    data: data.temperature,
+                    itemStyle: { color: 'red' },
+                    emphasis: { focus: 'series' },
+                    markArea: {
+                        itemStyle: {
+                            color: 'rgba(0, 255, 0, 0.1)'
+                        },
+                        data: [
+                            [
+                                { yAxis: optimalTemperatureRange[0] },
+                                { yAxis: optimalTemperatureRange[1] }
+                            ]
+                        ]
+                    }
+                },
+                {
+                    name: 'Humedad (%)',
+                    type: 'line',
+                    smooth: true,
+                    data: data.humidity,
+                    itemStyle: { color: 'blue' },
+                    emphasis: { focus: 'series' }
+                },
+                {
+                    name: 'AQI',
+                    type: 'line',
+                    smooth: true,
+                    data: data.aqi,
+                    itemStyle: { color: 'orange' },
+                    emphasis: { focus: 'series' }
+                }
+            ]
+        };
+
+        myChart.setOption(option);
+
+        // Escucha el evento para ocultar/mostrar temperatura y su rango óptimo
+        myChart.on('legendselectchanged', function (event) {
+            var isTemperatureVisible = event.selected['Temperatura (°C)'];
+            var option = myChart.getOption();
+
+            // Mostrar/ocultar el rango óptimo junto con la temperatura
+            option.series.forEach(function (series) {
+                if (series.name === 'Temperatura (°C)') {
+                    series.markArea = isTemperatureVisible ? {
+                        itemStyle: {
+                            color: 'rgba(0, 255, 0, 0.1)'
+                        },
+                        data: [
+                            [
+                                { yAxis: optimalTemperatureRange[0] },
+                                { yAxis: optimalTemperatureRange[1] }
+                            ]
+                        ]
+                    } : null;
+                }
+            });
+
+            myChart.setOption(option);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir CSV a Spring Boot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #dropzone {
+            width: 80%;
+            max-width: 500px;
+            padding: 20px;
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            margin: auto;
+            text-align: center;
+            cursor: pointer;
+            color: #007bff;
+        }
+        #dropzone.dragover {
+            background-color: #e0f7ff;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Subir Archivo CSV</h2>
+    <div id="dropzone">Arrastra y suelta el archivo CSV aquí</div>
+    <input type="file" id="fileInput" accept=".csv" style="display:none;">
+
+    <h3>Vista Previa de Datos</h3>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>PM2.5</th>
+                <th>PM10</th>
+                <th>Partículas</th>
+                <th>AQI</th>
+                <th>HCHO</th>
+                <th>TVOC</th>
+                <th>Temperatura</th>
+                <th>Humedad</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <button id="uploadBtn" disabled>Subir CSV</button>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const dataTable = document.querySelector('#dataTable tbody');
+        const uploadBtn = document.getElementById('uploadBtn');
+        let csvFile;
+
+        // Evento para arrastrar archivo
+        dropzone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropzone.classList.remove('dragover');
+            csvFile = event.dataTransfer.files[0];
+            processCSV(csvFile);
+        });
+
+        // Evento para hacer clic en la zona de carga
+        dropzone.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', () => {
+            csvFile = fileInput.files[0];
+            processCSV(csvFile);
+        });
+
+        // Función para procesar el CSV
+        function processCSV(file) {
+            if (!file || !file.name.endsWith('.csv')) {
+                alert("Por favor, selecciona un archivo CSV válido.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const content = e.target.result;
+                const rows = content.split("\n").slice(1); // Omitir encabezado
+                dataTable.innerHTML = ""; // Limpiar tabla
+
+                rows.forEach(row => {
+                    const cols = row.split(",");
+                    if (cols.length >= 9) {
+                        const tr = document.createElement("tr");
+                        cols.slice(0, 9).forEach(col => {
+                            const td = document.createElement("td");
+                            td.textContent = col.trim();
+                            tr.appendChild(td);
+                        });
+                        dataTable.appendChild(tr);
+                    }
+                });
+
+                uploadBtn.disabled = false; // Habilitar botón de subida
+            };
+            reader.readAsText(file);
+        }
+
+        // Subir archivo al backend
+        uploadBtn.addEventListener('click', () => {
+            if (!csvFile) {
+                alert("No hay archivo seleccionado.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("file", csvFile);
+
+            fetch("http://localhost:8080/api/csv/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert("Archivo subido exitosamente: " + data);
+                uploadBtn.disabled = true; // Deshabilitar después de la subida
+            })
+            .catch(error => alert("Error al subir el archivo: " + error));
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - AmbiSense</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #dfdce3;
+            color: #333;
+        }
+        header {
+            background: url('https://via.placeholder.com/1500x500') no-repeat center center/cover;
+            color: rgb(0, 0, 0);
+            text-shadow: 2px 2px 4px rgba(85, 65, 156, 0.7);
+        }
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+        }
+        header p {
+            font-size: 1.2rem;
+        }
+        h2 {
+            color: #7c719c;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+    
+    </style>
+</head>
+<body>
+    <header class="header d-flex justify-content-between align-items-center"
+        style="background-color: #007d96; padding: 10px 20px;">
+        <div class="logo">
+            <a href="/inicio">
+                <img src="imagenes/LogoHorizontal.png" alt="Logo de la Empresa" style="height: 50px;">
+            </a>
+        </div>
+        <nav class="menu">
+            <ul class="nav">
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="/instalacion">Instalación</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="/tienda">Tienda</a></li>
+                <li class="nav-item"><a class="nav-link text-white fw-bold" href="/sensores">Sensores</a></li>
+            </ul>
+        </nav>
+        <div class="perfil dropdown">
+            <img src="ruta--perfil.png" alt="Perfil" class="imagen-perfil dropdown-toggle" data-bs-toggle="dropdown">
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/perfil">Mi Perfil</a></li>
+                <li><a class="dropdown-item" href="/configuracion">Configuración</a></li>
+                <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <section class="mb-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2>¿Quiénes Somos?</h2>
+                    <p>
+                        AmbiSense es una plataforma innovadora que monitoriza y analiza el ambiente en las aulas en tiempo real. Utilizamos tecnología avanzada para ofrecer información sobre la calidad del aire, temperatura, humedad y luminosidad, ayudando a crear espacios educativos más saludables y cómodos.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <img src="imagenes/logo.jpg" class="img-fluid rounded" alt="Misión de AmbiSense">
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-center mb-4">Conoce al Equipo</h2>
+            <div class="row text-center">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <img src="imagenes/foto3.jpg" class="img-fluid rounded-circle" alt="CEO">
+                    <h5>Ramon Gual</h5>
+                    <p>CEO</p>
+                    <p class="text-muted">"Transformando espacios con tecnología e innovación."</p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <img src="imagenes/foto1.jpg" class="img-fluid rounded-circle" alt="Programador">
+                    <h5>Mihai Gidu</h5>
+                    <p>Programadora Líder</p>
+                    <p class="text-muted">"Escribiendo el código que da vida a las soluciones."</p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <img src="imagenes/foto2.jpg" class="img-fluid rounded-circle" alt="Ingeniero de Redes">
+                    <h5>Juan Pascual</h5>
+                    <p>Ingeniero de Redes</p>
+                    <p class="text-muted">"Asegurando un flujo de datos seguro y confiable."</p>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <img src="imagenes/foto4.jpg" class="img-fluid rounded-circle" alt="Diseñadora de Marketing">
+                    <h5>Sergio</h5>
+                    <p>Marketing y Diseño</p>
+                    <p class="text-muted">"Comunicando innovación a través del diseño."</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<footer class="text-center py-4" style="background-color: #007d96; color: white;">
+    <p>&copy; 2025 AmbiSense. Todos los derechos reservados.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header con Bootstrap</title>
+    <!-- Enlace a Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header {
+            background-color: #7c719c;
+            padding: 10px 20px;
+        }
+
+        .logo img {
+            height: 50px;
+        }
+
+        .menu a {
+            color: white;
+            font-weight: bold;
+        }
+
+        .menu a:hover {
+            color: #007d96;
+        }
+
+        .perfil {
+            position: relative;
+        }
+
+        .imagen-perfil {
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            right: 0;
+            left: auto;
+        }
+
+        .menu-perfil {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header d-flex justify-content-between align-items-center">
+        <!-- Logo -->
+        <div class="logo">
+            <a href="/inicio">
+                <img src="ruta-del-logo.png" alt="Logo de la Empresa">
+            </a>
+        </div>
+
+        <!-- Imagen de perfil con menú al lado -->
+        <div class="menu-perfil">
+            <!-- Botonera/Menu -->
+            <nav class="menu">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/instalacion">Instalación</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tienda">Tienda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sensores">Sensores</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Imagen de perfil con desplegable -->
+            <div class="perfil dropdown">
+                <img src="ruta-del-perfil.png" alt="Perfil" class="imagen-perfil dropdown-toggle" data-bs-toggle="dropdown">
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/perfil">Mi Perfil</a></li>
+                    <li><a class="dropdown-item" href="/configuracion">Configuración</a></li>
+                    <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Enlace a Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
