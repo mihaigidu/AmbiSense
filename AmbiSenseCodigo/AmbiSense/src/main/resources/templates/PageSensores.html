@@ -113,8 +113,8 @@
         var myChart = echarts.init(document.getElementById('chart1'));
 
         var optimalTemperature = [20, 24];
-        var optimalHumidity = 50;
-        var optimalAQI = 25;
+        var optimalHumidity = [40, 60];
+        var optimalAQI = [0, 50];
 
         async function fetchData() {
             try {
@@ -178,7 +178,7 @@
                             emphasis: { focus: 'series' },
                             markArea: {
                                 itemStyle: {
-                                    color: 'rgba(0, 255, 0, 0.1)'
+                                    color: 'rgba(251, 120, 118, 0.1)'
                                 },
                                 data: [
                                     [
@@ -187,22 +187,34 @@
                                     ]
                                 ]
                             }
-                        },
+                        },/*
                         {
                             name: 'Temperatura (°C) Rango Óptimo',
                             type: 'bar',
                             data: new Array(timeLabels.length).fill(optimalTemperature[1]),
                             stack: 'temperature',
                             itemStyle: { color: 'rgba(255, 99, 132, 0.3)' }
-                        },
+                        },*/
                         {
                             name: 'Humedad (%)',
                             type: 'line',
                             smooth: true,
                             data: humidityData,
-                            itemStyle: { color: 'blue' }
-                        },
-                        {
+                            itemStyle: { color: 'blue' },
+                            emphasis: { focus: 'series' },
+                            markArea: {
+                                itemStyle: {
+                                    color: 'rgba(118, 182, 251, 0.1)'
+                                },
+                                data: [
+                                    [
+                                        { yAxis: optimalHumidity[0] },
+                                        { yAxis: optimalHumidity[1] }
+                                    ]
+                                ]
+                            }
+                        },/*
+                        { hola
                             name: 'Humedad (%) Rango Óptimo',
                             type: 'bar',
                             data: new Array(timeLabels.length).fill(optimalHumidity),
@@ -215,13 +227,25 @@
                             data: new Array(timeLabels.length).fill(optimalAQI),
                             stack: 'aqi',
                             itemStyle: { color: 'rgba(255, 206, 86, 0.3)' }
-                        },
+                        },*/
                         {
                             name: 'AQI',
                             type: 'line',
                             smooth: true,
                             data: aqiData,
-                            itemStyle: { color: 'orange' }
+                            itemStyle: { color: 'orange' },
+                            emphasis: { focus: 'series' },
+                            markArea: {
+                                itemStyle: {
+                                    color: 'rgba(231, 251, 118, 0.1)'
+                                },
+                                data: [
+                                    [
+                                        { yAxis: optimalAQI[0] },
+                                        { yAxis: optimalAQI[1] }
+                                    ]
+                                ]
+                            }
                         }
                     ]
                 };
