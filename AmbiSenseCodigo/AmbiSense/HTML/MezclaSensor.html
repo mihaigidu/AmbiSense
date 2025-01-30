@@ -108,7 +108,7 @@
     </footer>
 
     <script>
-        const apiUrl = "http://localhost:8080/lecturas/2025-06-15";
+        const apiUrl = "http://localhost:8080/lecturas/2025-01-29";
 
         var myChart = echarts.init(document.getElementById('chart1'));
 
@@ -124,12 +124,27 @@
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
 
-                const variables = await response.json();
+                const lecturas = await response.json();
 
-                const temperatureData = variables.filter(item => item.variable.name === "Temperatura").map(item => item.valor);
-                const humidityData = variables.filter(item => item.variable.name === "Humedad").map(item => item.valor);
-                const aqiData = variables.filter(item => item.variable.name === "AQI").map(item => item.valor);
-                const timeLabels = variables.map(item => new Date(item.dateLectura).toLocaleTimeString());
+                // Extraer datos correctamente de la estructura devuelta por la API
+                const temperatureData = [];
+                const humidityData = [];
+                const aqiData = [];
+                const timeLabels = [];
+
+                lecturas.forEach(lectura => {
+                    const time = new Date(lectura.dateLectura).toLocaleTimeString();
+                    timeLabels.push(time);
+
+                    // Buscar las variables en cada lectura
+                    let temperatura = lectura.variables.find(v => v.nombre === "Temperatura");
+                    let humedad = lectura.variables.find(v => v.nombre === "Humedad");
+                    let aqi = lectura.variables.find(v => v.nombre === "AQI");
+
+                    temperatureData.push(temperatura ? temperatura.valor : null);
+                    humidityData.push(humedad ? humedad.valor : null);
+                    aqiData.push(aqi ? aqi.valor : null);
+                });
 
                 const option = {
                     legend: {
@@ -157,7 +172,6 @@
                             });
                             return content;
                         }
-
                     },
                     xAxis: {
                         type: 'category',
@@ -177,12 +191,12 @@
                             itemStyle: { color: 'red' }
                         },
                         {
-                    name: 'Temperatura (°C) Rango Óptimo',
-                    type: 'bar',
-                    data: new Array(timeLabels.length).fill(optimalTemperature),
-                    stack: 'temperature',
-                    itemStyle: { color: 'rgba(255, 99, 132, 0.3)' }
-                },
+                            name: 'Temperatura (°C) Rango Óptimo',
+                            type: 'bar',
+                            data: new Array(timeLabels.length).fill(optimalTemperature),
+                            stack: 'temperature',
+                            itemStyle: { color: 'rgba(255, 99, 132, 0.3)' }
+                        },
                         {
                             name: 'Humedad (%)',
                             type: 'line',
@@ -191,25 +205,25 @@
                             itemStyle: { color: 'blue' }
                         },
                         {
-                    name: 'Humedad (%) Rango Óptimo',
-                    type: 'bar',
-                    data: new Array(timeLabels.length).fill(optimalHumidity),
-                    stack: 'humidity',
-                    itemStyle: { color: 'rgba(54, 162, 235, 0.3)' }
-                },
-                {
-                    name: 'AQI Rango Óptimo',
-                    type: 'bar',
-                    data: new Array(timeLabels.length).fill(optimalAQI),
-                    stack: 'aqi',
-                    itemStyle: { color: 'rgba(255, 206, 86, 0.3)' }
-                },
+                            name: 'Humedad (%) Rango Óptimo',
+                            type: 'bar',
+                            data: new Array(timeLabels.length).fill(optimalHumidity),
+                            stack: 'humidity',
+                            itemStyle: { color: 'rgba(54, 162, 235, 0.3)' }
+                        },
                         {
                             name: 'AQI',
                             type: 'line',
                             smooth: true,
                             data: aqiData,
                             itemStyle: { color: 'orange' }
+                        },
+                        {
+                            name: 'AQI Rango Óptimo',
+                            type: 'bar',
+                            data: new Array(timeLabels.length).fill(optimalAQI),
+                            stack: 'aqi',
+                            itemStyle: { color: 'rgba(255, 206, 86, 0.3)' }
                         }
                     ]
                 };
@@ -226,6 +240,7 @@
             myChart.resize();
         });
     </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
