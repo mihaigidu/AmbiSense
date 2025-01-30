@@ -18,7 +18,7 @@ public class LecturaService {
     public void saveLectura(Lectura lectura) {
         if (lectura.getVariables() != null) {
             for (VariableLectura variable : lectura.getVariables()) {
-                variable.setLectura(lectura); // 🔹 Asociamos cada variable a la lectura
+                variable.setLectura(lectura); //Asociamos cada variable a la lectura
             }
         }
         lecturaRepository.save(lectura);

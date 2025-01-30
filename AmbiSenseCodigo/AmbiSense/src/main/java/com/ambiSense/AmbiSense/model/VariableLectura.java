@@ -1,6 +1,7 @@
 package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "variable_lectura")
@@ -20,6 +21,7 @@ public class VariableLectura {
 
     @ManyToOne
     @JoinColumn(name = "lectura_id", nullable = false)
+    @JsonBackReference  // Evita la serialización infinita
     private Lectura lectura;
 
     public VariableLectura() {}

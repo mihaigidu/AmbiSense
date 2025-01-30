@@ -1,5 +1,6 @@
 package com.ambiSense.AmbiSense.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Lectura {
     private LocalDateTime dateLectura;
 
     @OneToMany(mappedBy = "lectura", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference//Permite la serialización de esta lista
     private List<VariableLectura> variables;
 
     public Lectura() {}

@@ -15,9 +15,9 @@ public class Alerta {
     @JoinColumn(name = "sensor_id", nullable = false)
     private Sensor sensor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variable_id", nullable = false)
-    private Variable variable;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "variable_id", nullable = false)
+//    private Variable variable;
 
     private double valor;
     private double umbral;
@@ -45,13 +45,13 @@ public class Alerta {
         this.sensor = sensor;
     }
 
-    public Variable getVariable() {
-        return variable;
-    }
-
-    public void setVariable(Variable variable) {
-        this.variable = variable;
-    }
+//    public Variable getVariable() {
+//        return variable;
+//    }
+//
+//    public void setVariable(Variable variable) {
+//        this.variable = variable;
+//    }
 
     public double getValor() {
         return valor;

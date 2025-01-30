@@ -96,6 +96,8 @@
         processCSV(file);
     });
 
+    const parseValue = (val) => isNaN(parseFloat(val)) ? 0 : parseFloat(val);
+
     function processCSV(file) {
         if (!file || !file.name.toLowerCase().endsWith('.csv')) {
             alert("Por favor, selecciona un archivo CSV válido.");
@@ -111,38 +113,28 @@
                 return;
             }
 
-            const separator = rows[0].includes("\t") ? "\t" : ","; // Detecta si usa tabulaciones o comas
+            const separator = rows[0].includes("\t") ? "\t" : ",";
             jsonData = [];
-            dataTable.innerHTML = ""; // Limpia la tabla
+            dataTable.innerHTML = "";
 
-            rows.slice(1).forEach(row => {  // Omitir encabezado
+            rows.slice(1).forEach(row => {
                 const cols = row.split(separator).map(col => col.trim());
                 if (cols.length >= 9) {
-                    const fechaCompleta = cols[0].trim();
-                    const fecha = fechaCompleta.split(" ")[0]; // Extrae solo la fecha (sin la hora)
-
-                    if (!fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
-                        console.error("Fecha inválida en el CSV:", fecha);
-                        return;
-                    }
+                    let fechaCompleta = cols[0].trim(); // 2025-01-29 09:23:14
+                    let fechaISO = fechaCompleta.replace(" ", "T"); // 2025-01-29T09:23:14
 
                     const lectura = {
-                        dateLectura: `${fecha}T00:00:00`,
+                        dateLectura: fechaISO,  // 🔹 Ahora la fecha incluye la hora correctamente
                         variables: [
-                            { "nombre": "PM2.5", "valor": parseFloat(cols[1]) || 0, "unidad": "µg/m³" },
-                            { "nombre": "PM10", "valor": parseFloat(cols[2]) || 0, "unidad": "µg/m³" },
-                            { "nombre": "Particulas", "valor": parseInt(cols[3], 10) || 0, "unidad": "unidades" },
-                            { "nombre": "AQI", "valor": parseFloat(cols[4]) || 0, "unidad": "" },
-                            { "nombre": "HCHO", "valor": parseFloat(cols[5]) || 0, "unidad": "ppm" },
-                            { "nombre": "TVOC", "valor": parseFloat(cols[6]) || 0, "unidad": "ppb" },
-                            { "nombre": "Temperatura", "valor": parseFloat(cols[7]) || 0, "unidad": "°C" },
-                            { "nombre": "Humedad", "valor": parseFloat(cols[8]) || 0, "unidad": "%" }
+                            { "nombre": "PM2.5", "valor": parseValue(cols[1]), "unidad": "µg/m³" },
+                            { "nombre": "PM10", "valor": parseValue(cols[2]), "unidad": "µg/m³" },
+                            { "nombre": "Temperatura", "valor": parseValue(cols[7]), "unidad": "°C" },
+                            { "nombre": "Humedad", "valor": parseValue(cols[8]), "unidad": "%" }
                         ]
                     };
 
                     jsonData.push(lectura);
 
-                    // Agregar fila a la tabla
                     const tr = document.createElement("tr");
                     cols.forEach(col => {
                         const td = document.createElement("td");
@@ -150,8 +142,6 @@
                         tr.appendChild(td);
                     });
                     dataTable.appendChild(tr);
-                } else {
-                    console.warn("Fila inválida en el CSV:", row);
                 }
             });
 
