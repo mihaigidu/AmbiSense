@@ -2,6 +2,7 @@ package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Entity
 @Table(name = "lectura")
@@ -10,7 +11,14 @@ public class Lectura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+//    @ElementCollection
+//    @CollectionTable(name = "lectura_variables", joinColumns = @JoinColumn(name = "lectura_id"))
+//    @MapKeyColumn(name = "nombre_variable")
+//    @Column(name = "valor")
+//    private Map<String, Double> variables; // Mapea el nombre de la variable con su valor
+
     private double valor;
+
     @Column(name = "date")
     private LocalDateTime dateLectura;
 
@@ -21,6 +29,8 @@ public class Lectura {
 //    @ManyToOne
 //    @JoinColumn(name = "id_sensor")
 //    private Sensor sensor;
+
+    public Lectura() {}
 
 
     public Long getId() {

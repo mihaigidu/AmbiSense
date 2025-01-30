@@ -14,4 +14,8 @@ public class LecturaService {
     private LecturaRepository lecturaRepository;
 
     public List<Lectura> findAll() {return lecturaRepository.findAll();}
+
+    public void saveLectura(Lectura lectura){
+        lecturaRepository.save(lectura);
+    }
 }

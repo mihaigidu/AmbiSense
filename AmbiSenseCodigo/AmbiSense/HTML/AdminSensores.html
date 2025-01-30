@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir CSV a Spring Boot</title>
+    <title>Subir Datos JSON a API</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,115 +41,129 @@
 </head>
 <body>
 
-    <h2>Subir Archivo CSV</h2>
-    <div id="dropzone">Arrastra y suelta el archivo CSV aquí</div>
-    <input type="file" id="fileInput" accept=".csv" style="display:none;">
+<h2>Subir Archivo CSV</h2>
+<div id="dropzone">Arrastra y suelta el archivo CSV aquí</div>
+<input type="file" id="fileInput" accept=".csv" style="display:none;">
 
-    <h3>Vista Previa de Datos</h3>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>PM2.5</th>
-                <th>PM10</th>
-                <th>Partículas</th>
-                <th>AQI</th>
-                <th>HCHO</th>
-                <th>TVOC</th>
-                <th>Temperatura</th>
-                <th>Humedad</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<h3>Vista Previa de Datos</h3>
+<table id="dataTable">
+    <thead>
+    <tr>
+        <th>Fecha</th>
+        <th>PM2.5</th>
+        <th>PM10</th>
+        <th>Partículas</th>
+        <th>AQI</th>
+        <th>HCHO</th>
+        <th>TVOC</th>
+        <th>Temperatura</th>
+        <th>Humedad</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 
-    <button id="uploadBtn" disabled>Subir CSV</button>
+<button id="uploadBtn" disabled>Subir JSON</button>
 
-    <script>
-        const dropzone = document.getElementById('dropzone');
-        const fileInput = document.getElementById('fileInput');
-        const dataTable = document.querySelector('#dataTable tbody');
-        const uploadBtn = document.getElementById('uploadBtn');
-        let csvFile;
+<script>
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const dataTable = document.querySelector('#dataTable tbody');
+    const uploadBtn = document.getElementById('uploadBtn');
+    let jsonData = [];
 
-        // Evento para arrastrar archivo
-        dropzone.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropzone.classList.add('dragover');
-        });
+    dropzone.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropzone.classList.add('dragover');
+    });
 
-        dropzone.addEventListener('dragleave', () => {
-            dropzone.classList.remove('dragover');
-        });
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('dragover');
+    });
 
-        dropzone.addEventListener('drop', (event) => {
-            event.preventDefault();
-            dropzone.classList.remove('dragover');
-            csvFile = event.dataTransfer.files[0];
-            processCSV(csvFile);
-        });
+    dropzone.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropzone.classList.remove('dragover');
+        const file = event.dataTransfer.files[0];
+        processCSV(file);
+    });
 
-        // Evento para hacer clic en la zona de carga
-        dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('click', () => fileInput.click());
 
-        fileInput.addEventListener('change', () => {
-            csvFile = fileInput.files[0];
-            processCSV(csvFile);
-        });
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
+        processCSV(file);
+    });
 
-        // Función para procesar el CSV
-        function processCSV(file) {
-            if (!file || !file.name.endsWith('.CSV')) {
-                alert("Por favor, selecciona un archivo CSV válido.");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const content = e.target.result;
-                const rows = content.split("\n").slice(1); // Omitir encabezado
-                dataTable.innerHTML = ""; // Limpiar tabla
-
-                rows.forEach(row => {
-                    const cols = row.split(",");
-                    if (cols.length >= 9) {
-                        const tr = document.createElement("tr");
-                        cols.slice(0, 9).forEach(col => {
-                            const td = document.createElement("td");
-                            td.textContent = col.trim();
-                            tr.appendChild(td);
-                        });
-                        dataTable.appendChild(tr);
-                    }
-                });
-
-                uploadBtn.disabled = false; // Habilitar botón de subida
-            };
-            reader.readAsText(file);
+    function processCSV(file) {
+        if (!file || !file.name.endsWith('.CSV')) {
+            alert("Por favor, selecciona un archivo CSV válido.");
+            return;
         }
 
-        // Subir archivo al backend
-        uploadBtn.addEventListener('click', () => {
-            if (!csvFile) {
-                alert("No hay archivo seleccionado.");
-                return;
-            }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const content = e.target.result;
+            const rows = content.split("\n").slice(1);
+            dataTable.innerHTML = "";
+            jsonData = [];
 
-            const formData = new FormData();
-            formData.append("file", csvFile);
+            rows.forEach(row => {
+                const cols = row.split(",");
+                if (cols.length >= 9) {
+                    const dataObj = {
+                        fecha: cols[0].trim(),
+                        pm25: parseFloat(cols[1].trim()),
+                        pm10: parseFloat(cols[2].trim()),
+                        particulas: parseInt(cols[3].trim(), 10),
+                        aqi: parseFloat(cols[4].trim()),
+                        hcho: parseFloat(cols[5].trim()),
+                        tvoc: parseFloat(cols[6].trim()),
+                        temperatura: parseFloat(cols[7].trim()),
+                        humedad: parseFloat(cols[8].trim())
+                    };
 
-            fetch("http://localhost:8080/api/csv/upload", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.text())
+                    jsonData.push(dataObj);
+
+                    const tr = document.createElement("tr");
+                    cols.slice(0, 9).forEach(col => {
+                        const td = document.createElement("td");
+                        td.textContent = col.trim();
+                        tr.appendChild(td);
+                    });
+                    dataTable.appendChild(tr);
+                }
+            });
+
+            uploadBtn.disabled = false;
+        };
+        reader.readAsText(file);
+    }
+
+    uploadBtn.addEventListener('click', () => {
+        if (jsonData.length === 0) {
+            alert("No hay datos para enviar.");
+            return;
+        }
+
+        fetch("http://localhost:8080/api/datos/upload", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(jsonData)
+        })
+            .then(response => response.json())  // ⬅ Intentamos parsear JSON
             .then(data => {
-                alert("Archivo subido exitosamente: " + data);
-                uploadBtn.disabled = true; // Deshabilitar después de la subida
+                alert("Respuesta del servidor: " + data.mensaje);
+                uploadBtn.disabled = true;
             })
-            .catch(error => alert("Error al subir el archivo: " + error));
-        });
-    </script>
+            .catch(error => {
+                console.error("Error en la subida:", error);
+                alert("Error al subir los datos: " + error.message);
+            });
+    });
+</script>
 
 </body>
 </html>

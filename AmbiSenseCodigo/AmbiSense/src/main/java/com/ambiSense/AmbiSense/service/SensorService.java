@@ -33,4 +33,7 @@ public class SensorService {
     public void deleteById(Long id) {
         sensorRepository.deleteById(id);
     }
+
+
+
 }
