@@ -72,6 +72,7 @@
     const uploadBtn = document.getElementById('uploadBtn');
     let jsonData = [];
 
+    // Manejo de arrastrar y soltar archivos
     dropzone.addEventListener('dragover', (event) => {
         event.preventDefault();
         dropzone.classList.add('dragover');
@@ -96,7 +97,7 @@
     });
 
     function processCSV(file) {
-        if (!file || !file.name.endsWith('.CSV')) {
+        if (!file || !file.name.toLowerCase().endsWith('.csv')) {
             alert("Por favor, selecciona un archivo CSV válido.");
             return;
         }
@@ -104,38 +105,57 @@
         const reader = new FileReader();
         reader.onload = function (e) {
             const content = e.target.result;
-            const rows = content.split("\n").slice(1);
-            dataTable.innerHTML = "";
-            jsonData = [];
+            let rows = content.split("\n").map(row => row.trim()).filter(row => row.length > 0);
+            if (rows.length <= 1) {
+                alert("El archivo CSV está vacío o no tiene datos.");
+                return;
+            }
 
-            rows.forEach(row => {
-                const cols = row.split(",");
+            const separator = rows[0].includes("\t") ? "\t" : ","; // Detecta si usa tabulaciones o comas
+            jsonData = [];
+            dataTable.innerHTML = ""; // Limpia la tabla
+
+            rows.slice(1).forEach(row => {  // Omitir encabezado
+                const cols = row.split(separator).map(col => col.trim());
                 if (cols.length >= 9) {
-                    const dataObj = {
-                        fecha: cols[0].trim(),
-                        pm25: parseFloat(cols[1].trim()),
-                        pm10: parseFloat(cols[2].trim()),
-                        particulas: parseInt(cols[3].trim(), 10),
-                        aqi: parseFloat(cols[4].trim()),
-                        hcho: parseFloat(cols[5].trim()),
-                        tvoc: parseFloat(cols[6].trim()),
-                        temperatura: parseFloat(cols[7].trim()),
-                        humedad: parseFloat(cols[8].trim())
+                    const fechaCompleta = cols[0].trim();
+                    const fecha = fechaCompleta.split(" ")[0]; // Extrae solo la fecha (sin la hora)
+
+                    if (!fecha.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        console.error("Fecha inválida en el CSV:", fecha);
+                        return;
+                    }
+
+                    const lectura = {
+                        dateLectura: `${fecha}T00:00:00`,
+                        variables: [
+                            { "nombre": "PM2.5", "valor": parseFloat(cols[1]) || 0, "unidad": "µg/m³" },
+                            { "nombre": "PM10", "valor": parseFloat(cols[2]) || 0, "unidad": "µg/m³" },
+                            { "nombre": "Particulas", "valor": parseInt(cols[3], 10) || 0, "unidad": "unidades" },
+                            { "nombre": "AQI", "valor": parseFloat(cols[4]) || 0, "unidad": "" },
+                            { "nombre": "HCHO", "valor": parseFloat(cols[5]) || 0, "unidad": "ppm" },
+                            { "nombre": "TVOC", "valor": parseFloat(cols[6]) || 0, "unidad": "ppb" },
+                            { "nombre": "Temperatura", "valor": parseFloat(cols[7]) || 0, "unidad": "°C" },
+                            { "nombre": "Humedad", "valor": parseFloat(cols[8]) || 0, "unidad": "%" }
+                        ]
                     };
 
-                    jsonData.push(dataObj);
+                    jsonData.push(lectura);
 
+                    // Agregar fila a la tabla
                     const tr = document.createElement("tr");
-                    cols.slice(0, 9).forEach(col => {
+                    cols.forEach(col => {
                         const td = document.createElement("td");
-                        td.textContent = col.trim();
+                        td.textContent = col;
                         tr.appendChild(td);
                     });
                     dataTable.appendChild(tr);
+                } else {
+                    console.warn("Fila inválida en el CSV:", row);
                 }
             });
 
-            uploadBtn.disabled = false;
+            uploadBtn.disabled = jsonData.length === 0;
         };
         reader.readAsText(file);
     }
@@ -153,7 +173,7 @@
             },
             body: JSON.stringify(jsonData)
         })
-            .then(response => response.json())  // ⬅ Intentamos parsear JSON
+            .then(response => response.json())
             .then(data => {
                 alert("Respuesta del servidor: " + data.mensaje);
                 uploadBtn.disabled = true;
@@ -163,6 +183,7 @@
                 alert("Error al subir los datos: " + error.message);
             });
     });
+
 </script>
 
 </body>

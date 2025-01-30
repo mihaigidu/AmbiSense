@@ -1,5 +1,2 @@
-
-DROP TABLE lectura;
-DROP TABLE variable;
-
-
+DROP TABLE lectura_variables CASCADE;
+DROP TABLE lectura CASCADE;

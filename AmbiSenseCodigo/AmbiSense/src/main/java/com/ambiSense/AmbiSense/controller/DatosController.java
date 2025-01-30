@@ -18,10 +18,11 @@ public class DatosController {
         this.lecturaService = lecturaService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping(value="/upload", consumes = "application/json")
     public ResponseEntity<String> recibirDatos(@RequestBody List<Lectura> lecturas) {
-        lecturas.forEach(lecturaService::saveLectura);
-
+        for (Lectura lectura : lecturas) {
+            lecturaService.saveLectura(lectura);
+        }
         return ResponseEntity.ok("{\"mensaje\": \"Datos recibidos correctamente\"}");
     }
 }

@@ -2,6 +2,7 @@ package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -11,42 +12,20 @@ public class Lectura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ElementCollection
-//    @CollectionTable(name = "lectura_variables", joinColumns = @JoinColumn(name = "lectura_id"))
-//    @MapKeyColumn(name = "nombre_variable")
-//    @Column(name = "valor")
-//    private Map<String, Double> variables; // Mapea el nombre de la variable con su valor
-
-    private double valor;
-
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private LocalDateTime dateLectura;
 
-    @ManyToOne
-    @JoinColumn(name = "id_variable")
-    private Variable variable;
-
-//    @ManyToOne
-//    @JoinColumn(name = "id_sensor")
-//    private Sensor sensor;
+    @OneToMany(mappedBy = "lectura", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VariableLectura> variables;
 
     public Lectura() {}
-
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long idLectura) {
-        this.id = idLectura;
-    }
-
-    public double getValor() {
-        return valor;
-    }
-
-    public void setValor(double valor) {
-        this.valor = valor;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public LocalDateTime getDateLectura() {
@@ -57,11 +36,11 @@ public class Lectura {
         this.dateLectura = dateLectura;
     }
 
-    public Variable getVariable() {
-        return variable;
+    public List<VariableLectura> getVariables() {
+        return variables;
     }
 
-    public void setVariable(Variable variable) {
-        this.variable = variable;
+    public void setVariables(List<VariableLectura> variables) {
+        this.variables = variables;
     }
 }
