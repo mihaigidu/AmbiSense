@@ -1,5 +1,6 @@
 package com.ambiSense.AmbiSense.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class Lectura {
 
     @ManyToOne
     @JoinColumn(name = "sensor_id", nullable = false)
+    @JsonBackReference
     private Sensor sensor;
 
     public Lectura() {}
