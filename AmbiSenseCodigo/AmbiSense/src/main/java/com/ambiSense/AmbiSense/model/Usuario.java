@@ -2,6 +2,7 @@ package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,8 +23,11 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private boolean loggedIn; //Para saber si el usuario esta conectado o no
+
     @Column(name = "log_date")
-    private LocalDate logDate;
+    private LocalDateTime logDate;
 
     // Relación muchos a uno con Rol
     @ManyToOne
@@ -73,11 +77,11 @@ public class Usuario {
         this.password = password;
     }
 
-    public LocalDate getLogDate() {
+    public LocalDateTime getLogDate() {
         return logDate;
     }
 
-    public void setLogDate(LocalDate logDate) {
+    public void setLogDate(LocalDateTime logDate) {
         this.logDate = logDate;
     }
 
