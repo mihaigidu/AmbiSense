@@ -48,11 +48,11 @@ public class LecturaService {
         return lecturaRepository.findAll();
     }
 
-    public List<Lectura> findByUbication(String ubication) {
-        return lecturaRepository.findBySensor_Ubication(ubication);
-    }
-
-    public List<Lectura> findBySensor(Long sensorId) {
-        return lecturaRepository.findBySensor_Id(sensorId);
-    }
+//    public List<Lectura> findByUbication(String ubication) {
+//        return lecturaRepository.findBySensor_Ubication(ubication);
+//    }
+//
+//    public List<Lectura> findBySensor(Long sensorId) {
+//        return lecturaRepository.findBySensor_Id(sensorId);
+//    }
 }

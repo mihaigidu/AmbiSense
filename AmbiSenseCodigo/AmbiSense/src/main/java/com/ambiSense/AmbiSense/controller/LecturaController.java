@@ -33,9 +33,9 @@ public class LecturaController {
         return listByDay;
     }
 
-    @GetMapping("/{ubicacion}")
-    public List<Lectura> findByUbication(@PathVariable String ubicacion) {
-        return lecturaService.findByUbication(ubicacion);
-    }
+//    @GetMapping("/{ubicacion}")
+//    public List<Lectura> findByUbication(@PathVariable String ubicacion) {
+//        return lecturaService.findByUbication(ubicacion);
+//    }
 
 }

@@ -18,8 +18,8 @@ public class  Sensor {
     private String type;
     private LocalDateTime creationDate;
 
-    @OneToMany(mappedBy = "sensor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Lectura> lecturas = new HashSet<>();
+//    @OneToMany(mappedBy = "sensor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<Lectura> lecturas = new HashSet<>();
 
     @ManyToMany(mappedBy = "sensores")
     private Set<Usuario> usuarios = new HashSet<>();
@@ -84,11 +84,11 @@ public class  Sensor {
         this.alertas = alertas;
     }
 
-    public Set<Lectura> getLecturas() {
-        return lecturas;
-    }
-
-    public void setLecturas(Set<Lectura> lecturas) {
-        this.lecturas = lecturas;
-    }
+//    public Set<Lectura> getLecturas() {
+//        return lecturas;
+//    }
+//
+//    public void setLecturas(Set<Lectura> lecturas) {
+//        this.lecturas = lecturas;
+//    }
 }
