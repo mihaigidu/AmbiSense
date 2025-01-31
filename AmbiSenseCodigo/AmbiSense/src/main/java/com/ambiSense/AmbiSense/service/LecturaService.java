@@ -27,4 +27,8 @@ public class LecturaService {
     public List<Lectura> findAll() {
         return lecturaRepository.findAll();
     }
+
+    public List<Lectura> findByUbication(String ubication) {
+        return lecturaRepository.findBySensor_Ubication(ubication);
+    }
 }

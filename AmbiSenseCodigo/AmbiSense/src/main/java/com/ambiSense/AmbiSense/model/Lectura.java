@@ -20,6 +20,10 @@ public class Lectura {
     @JsonManagedReference//Permite la serialización de esta lista
     private List<VariableLectura> variables;
 
+    @ManyToOne
+    @JoinColumn(name = "sensor_id", nullable = false)
+    private Sensor sensor;
+
     public Lectura() {}
 
     public Long getId() {
@@ -44,5 +48,13 @@ public class Lectura {
 
     public void setVariables(List<VariableLectura> variables) {
         this.variables = variables;
+    }
+
+    public Sensor getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(Sensor sensor) {
+        this.sensor = sensor;
     }
 }
