@@ -9,7 +9,10 @@ import com.ambiSense.AmbiSense.repository.VariableLecturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LecturaService {
@@ -20,19 +23,25 @@ public class LecturaService {
     @Autowired
     private SensorRepository sensorRepository;
 
-//    public void saveLectura(Lectura lectura, Long sensorId) {
-//        Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() ->
-//                new RuntimeException("Sensor con ID " + sensorId + " no encontrado"));
-//
-//        lectura.setSensor(sensor);
-//
-//        if (lectura.getVariables() != null) {
-//            for (VariableLectura variable : lectura.getVariables()) {
-//                variable.setLectura(lectura);
-//            }
-//        }
-//        lecturaRepository.save(lectura);
-//    }
+    public void saveLecturaConId(Lectura lectura, Long sensorId) {
+        Sensor sensor = sensorRepository.findById(sensorId).orElseThrow(() ->
+                new RuntimeException("Sensor con ID " + sensorId + " no encontrado"));
+
+        lectura.setSensor(sensor);
+
+        if (lectura.getVariables() != null) {
+            for (VariableLectura variable : lectura.getVariables()) {
+                variable.setLectura(lectura);
+            }
+        }
+        lecturaRepository.save(lectura);
+    }
+    public List<Lectura> findBySensorAndDay(Long sensorId, LocalDate date) {
+        return lecturaRepository.findAll().stream()
+                .filter(lectura -> lectura.getSensor().getId() == sensorId &&
+                        lectura.getDateLectura().toLocalDate().equals(date))
+                .collect(Collectors.toList());
+    }
 
 
     public void saveLectura(Lectura lectura) {
@@ -48,11 +57,4 @@ public class LecturaService {
         return lecturaRepository.findAll();
     }
 
-//    public List<Lectura> findByUbication(String ubication) {
-//        return lecturaRepository.findBySensor_Ubication(ubication);
-//    }
-//
-//    public List<Lectura> findBySensor(Long sensorId) {
-//        return lecturaRepository.findBySensor_Id(sensorId);
-//    }
 }
