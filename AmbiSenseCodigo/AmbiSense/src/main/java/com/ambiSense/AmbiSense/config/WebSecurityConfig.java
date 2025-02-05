@@ -1,8 +1,8 @@
+package com.ambiSense.AmbiSense.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,17 +15,20 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // No necesario en APIs REST sin cookies
+                .csrf(csrf -> csrf.disable()) // Desactivar CSRF para permitir peticiones desde Postman/Frontend
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // Permitir autenticación sin token
-                        .requestMatchers("/public/**").permitAll() // Endpoints públicos
-                        .anyRequest().authenticated() // Proteger todos los demás
+                        .requestMatchers("/auth/**").permitAll() // Permitir acceso sin autenticación
+                        .requestMatchers("/public/**").permitAll() // Si tienes otros endpoints públicos
+                        .requestMatchers("/sensores/**").permitAll()
+                        .requestMatchers("/lecturas/**").permitAll()// Permitir acceso a todos los endpoints de sensores
+                        .anyRequest().authenticated() // Proteger los demás endpoints
                 )
                 .httpBasic(httpBasic -> httpBasic.disable()) // Desactivar autenticación básica
                 .sessionManagement(session -> session.disable()); // API sin sesiones
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

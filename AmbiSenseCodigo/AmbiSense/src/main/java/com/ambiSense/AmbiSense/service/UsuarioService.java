@@ -3,20 +3,22 @@ package com.ambiSense.AmbiSense.service;
 import com.ambiSense.AmbiSense.model.Usuario;
 import com.ambiSense.AmbiSense.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UsuarioService implements UserDetailsService {
-    @Autowired
-    private UsuarioRepository usuarioRepository ;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -28,10 +30,14 @@ public class UsuarioService implements UserDetailsService {
 
         Usuario usuario = usuarioOpt.get();
 
-        return User.builder()
-                .username(usuario.getEmail())
-                .password(usuario.getPassword()) // La contraseña debe estar encriptada
-                .roles(usuario.getRol().getName()) // Si tienes un sistema de roles
-                .build();
+        return new User(
+                usuario.getEmail(),
+                usuario.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + usuario.getRol().name()))
+        );
+    }
+
+    public List<Usuario> findAll() {
+        return usuarioRepository.findAll();
     }
 }

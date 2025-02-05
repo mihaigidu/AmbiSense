@@ -1,9 +1,9 @@
 package com.ambiSense.AmbiSense.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -23,28 +23,43 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private boolean loggedIn; //Para saber si el usuario esta conectado o no
-
-    @Column(name = "log_date")
-    private LocalDateTime logDate;
-
-    // Relación muchos a uno con Rol
-    @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
-    // Relación muchos a muchos con Sensor "Tabla Intermedia"
+//    @Column(nullable = false)
+    private boolean loggedIn; // Indica si el usuario está conectado o no
+
+//    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt; // Fecha de creación del usuario
+
     @ManyToMany
     @JoinTable(
-            name = "sensor_usuario",  // Nombre de la tabla intermedia
-            joinColumns = @JoinColumn(name = "id_user"),  // Columna que hace referencia a Usuario
-            inverseJoinColumns = @JoinColumn(name = "id_sensor")  // Columna que hace referencia a Sensor
+            name = "sensor_usuario",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_sensor")
     )
     private Set<Sensor> sensores = new HashSet<>();
 
-    // Getters y Setters
+    public enum Rol {
+        ADMIN, ALUMNO;
+    }
 
+    // Constructores
+    public Usuario() {
+        this.createdAt = LocalDateTime.now(); // Se asigna la fecha de creación automáticamente
+    }
+
+    public Usuario(String name, String email, String password, Rol rol) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.rol = rol;
+        this.createdAt = LocalDateTime.now();
+        this.loggedIn = false;
+    }
+
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -77,14 +92,6 @@ public class Usuario {
         this.password = password;
     }
 
-    public LocalDateTime getLogDate() {
-        return logDate;
-    }
-
-    public void setLogDate(LocalDateTime logDate) {
-        this.logDate = logDate;
-    }
-
     public Rol getRol() {
         return rol;
     }
@@ -93,11 +100,49 @@ public class Usuario {
         this.rol = rol;
     }
 
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     public Set<Sensor> getSensores() {
         return sensores;
     }
 
     public void setSensores(Set<Sensor> sensores) {
         this.sensores = sensores;
+    }
+
+    // Métodos toString, equals y hashCode
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", rol=" + rol +
+                ", loggedIn=" + loggedIn +
+                ", createdAt=" + createdAt +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id.equals(usuario.id) && email.equals(usuario.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
     }
 }
