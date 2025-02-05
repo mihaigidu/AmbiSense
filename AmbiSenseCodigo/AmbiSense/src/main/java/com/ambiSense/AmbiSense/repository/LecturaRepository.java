@@ -8,7 +8,5 @@ import java.util.List;
 
 @Repository
 public interface LecturaRepository extends JpaRepository<Lectura, Integer> {
-//    List<Lectura> findBySensor_Ubication(String ubication);
-//
-//    List<Lectura> findBySensor_Id(Long sensorId);
+
 }

@@ -22,9 +22,9 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping
-    public List<Usuario> findAll(){ return usuarioService.findAll();
-    }
+//    @GetMapping
+//    public List<Usuario> findAll(){ return usuarioService.findAll();
+//    }
 
     @PostMapping("/save")
     public void saveUsuario(){

@@ -11,7 +11,7 @@ public class Rol {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String rol;
+    private String name;
 
     @OneToMany(mappedBy = "rol", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Usuario> usuarios;
@@ -26,12 +26,12 @@ public class Rol {
         this.id = id;
     }
 
-    public String getRol() {
-        return rol;
+    public String getName() {
+        return name;
     }
 
-    public void setRol(String rol) {
-        this.rol = rol;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<Usuario> getUsuarios() {
